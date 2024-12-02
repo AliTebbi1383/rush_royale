@@ -31,8 +31,7 @@ void GameGraphics::setBorderTickness(qreal newTickness) {
   }
 }
 
-void GameGraphics::resetPlayerType()
-{
+void GameGraphics::resetPlayerType() {
   setPlayerType(GameResourceManager::Dummy);
 }
 
@@ -59,7 +58,7 @@ void GameGraphics::paint(QPainter *painter,
   QRectF rect = boundingRect().marginsRemoved(QMarginsF{bm, bm, bm, bm});
 
   if (hasPlayer()) {
-    aResourceManager->paintImage(painter,rect,ptype);
+    aResourceManager->paintImage(painter, rect, ptype);
   }
 
   QPen pen(m_border_color, m_border_thickness);

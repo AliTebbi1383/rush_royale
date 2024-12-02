@@ -6,5 +6,7 @@
         <file>assets/enemy.png</file>
         <file>assets/agent2.png</file>
         <file>assets/agent3.png</file>
+        <file>assets/enemy2.png</file>
+        <file>assets/enemy3.png</file>
     </qresource>
 </RCC>
