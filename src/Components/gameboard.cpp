@@ -42,7 +42,7 @@ GameBoard::GameBoard(QWidget *parent) : QGraphicsView(parent) {
   m_enemies_path =
       scene->addPath(enemyPath, QPen(Qt::magenta, 2.0f, Qt::DashLine,
                                      Qt::PenCapStyle::RoundCap, Qt::RoundJoin));
-  m_enemies_path->setZValue(0);
+  m_enemies_path->setZValue(2);
 
   m_gate_lbls = new QLabel[2];
 
@@ -77,6 +77,11 @@ GameBoard::GameBoard(QWidget *parent) : QGraphicsView(parent) {
   connect(enemies_timer, &QTimer::timeout, this, &GameBoard::updateEnemies);
   enemies_timer->setTimerType(Qt::CoarseTimer);
   enemies_timer->start(750);
+
+  auto *m_elixir_proxy = new QGraphicsProxyWidget(m_layout_widget);
+  m_elixir_label = new QLabel("Elixir: 0");
+  m_elixir_proxy->setWidget(m_elixir_label);
+  m_game_container->addItem(m_elixir_proxy);
 
   scene->addItem(m_layout_widget);
 

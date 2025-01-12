@@ -36,6 +36,7 @@ class GameBoard : public QGraphicsView {
   QGraphicsLinearLayout *m_agents_layout;
   QGraphicsGridLayout *m_game_layout;
   QGraphicsPathItem *m_enemies_path;
+  QLabel *m_elixir_label;
   QList<int> m_enemies;
   QLabel *m_gate_lbls;
   AgentsDeckArray m_agents;
@@ -43,8 +44,8 @@ class GameBoard : public QGraphicsView {
 
   int timerCounter = 0;
 
-  static bool isEnemyWay(int i,int j);
-  GameGraphics* mapEnemyFromIndex(int index);
+  static bool isEnemyWay(int i, int j);
+  GameGraphics *mapEnemyFromIndex(int index);
 
  private slots:
   void updateEnemies();

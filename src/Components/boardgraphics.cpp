@@ -1,27 +1,32 @@
 #include "boardgraphics.h"
 
+#include <Logger.h>
+
 #include <QGraphicsSceneDragDropEvent>
 #include <QMimeData>
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
 
-#include <Logger.h>
-
 #define GAME_BOARD_BORDER_TICKNESS 1.0f
 #define GAME_BOARD_SQUARE_WIDTH 75.0f
 
-BoardGraphics::BoardGraphics(bool enemy,QGraphicsItem *parent)
-    : GameGraphics(parent), m_overDrop(false),m_enemy(enemy) {
+BoardGraphics::BoardGraphics(bool enemy, QGraphicsItem *parent)
+    : GameGraphics(parent), m_overDrop(false), m_enemy(enemy) {
   setBorderTickness(GAME_BOARD_BORDER_TICKNESS);
   setSquareWidth(GAME_BOARD_SQUARE_WIDTH);
-  setBorderColor(enemy ? Qt::red : Qt::green);
+  setBorderColor(enemy ? Qt::darkRed : Qt::darkGreen);
   setAcceptDrops(true);
 }
 
 void BoardGraphics::paint(QPainter *painter,
                           const QStyleOptionGraphicsItem *option,
                           QWidget *widget) {
-  if(m_overDrop){
+  const QPixmap &bg =
+      m_enemy ? aResourceManager->red_grass : aResourceManager->green_grass;
+  painter->drawPixmap(
+      boundingRect().marginsAdded(QMarginsF(0.5f, 0.5f, 0.5f, 0.5f)), bg,
+      QRectF(QPointF(0.0f, 0.0f), bg.size()));
+  if (m_overDrop) {
     painter->setPen(option->palette.color(QPalette::Text));
     painter->drawRoundedRect(boundingRect(), 0.2, 0.2, Qt::RelativeSize);
   }
@@ -29,7 +34,8 @@ void BoardGraphics::paint(QPainter *painter,
 }
 
 void BoardGraphics::dragEnterEvent(QGraphicsSceneDragDropEvent *event) {
-  if (!m_enemy && event->mimeData()->hasFormat("application/x-dnditemdata")) {
+  if (!m_enemy && !hasPlayer() &&
+      event->mimeData()->hasFormat("application/x-dnditemdata")) {
     event->setProposedAction(Qt::MoveAction);
     event->accept();
     m_overDrop = true;
@@ -45,7 +51,8 @@ void BoardGraphics::dragLeaveEvent(QGraphicsSceneDragDropEvent *event) {
 }
 
 void BoardGraphics::dropEvent(QGraphicsSceneDragDropEvent *event) {
-  auto playerType = GameResourceManager::deserializePlayerType(event->mimeData()->data("application/x-dnditemdata"));
+  auto playerType = GameResourceManager::deserializePlayerType(
+      event->mimeData()->data("application/x-dnditemdata"));
   setPlayerType(playerType);
   qCDebug(gameLog) << "Agent by ID: " << playerType << ", Moved into board";
   m_overDrop = false;

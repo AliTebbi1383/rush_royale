@@ -1,12 +1,14 @@
 <RCC>
     <qresource prefix="/">
         <file>assets/icon.png</file>
-        <file>assets/bg.jpeg</file>
         <file>assets/agent.png</file>
         <file>assets/enemy.png</file>
         <file>assets/agent2.png</file>
         <file>assets/agent3.png</file>
         <file>assets/enemy2.png</file>
         <file>assets/enemy3.png</file>
+        <file>assets/bg.jpg</file>
+        <file>assets/red_grass.jpg</file>
+        <file>assets/green_grass.jpg</file>
     </qresource>
 </RCC>

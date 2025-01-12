@@ -8,6 +8,26 @@ set(app_SRCS
     Components/gamegraphics.h Components/gamegraphics.cpp
     Components/agentgraphics.h Components/agentgraphics.cpp
     Components/boardgraphics.h Components/boardgraphics.cpp
+    # Game
+    Game/agent.h Game/agent.cpp
+    Game/agentcontext.h Game/agentcontext.cpp
+    Game/firststrikeragent.h Game/firststrikeragent.cpp
+    Game/strikeragent.h Game/strikeragent.cpp
+    Game/endstrikeragent.h Game/endstrikeragent.cpp
+    Game/randomstrikeragent.h Game/randomstrikeragent.cpp
+    Game/maxhealthstrikeragent.h Game/maxhealthstrikeragent.cpp
+    Game/blockeragent.h Game/blockeragent.cpp
+    Game/bomberblockeragent.h Game/bomberblockeragent.cpp
+    Game/trapblockeragent.h Game/trapblockeragent.cpp
+    Game/enemy.h Game/enemy.cpp
+    Game/enemycontext.h Game/enemycontext.cpp
+    Game/bossenemy.h Game/bossenemy.cpp
+    Game/freezerbossenemy.h Game/freezerbossenemy.cpp
+    Game/disarmerbossenemy.h Game/disarmerbossenemy.cpp
+    Game/eraserbossenemy.h Game/eraserbossenemy.cpp
+    Game/soldierenemy.h Game/soldierenemy.cpp
+    Game/runnersoldierenemy.h Game/runnersoldierenemy.cpp
+    Game/sheildersoldierenemy.h Game/sheildersoldierenemy.cpp
     # main
     gameresourcemanager.h gameresourcemanager.cpp
     Logger.h

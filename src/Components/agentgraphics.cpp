@@ -5,9 +5,9 @@
 #include <QDrag>
 #include <QGraphicsSceneMouseEvent>
 #include <QMimeData>
+#include <QRandomGenerator>
 #include <QTime>
 #include <QWidget>
-#include <QRandomGenerator>
 
 #define AGENTS_BORDER_TICKNESS 2.0f
 #define AGENTS_SQUARE_WIDTH 100.0f
@@ -49,7 +49,7 @@ void AgentGraphics::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
                   GameResourceManager::serializePlayerType(playerType()));
 
     Qt::DropAction action = drag->exec();
-    if(action & Qt::DropAction::MoveAction){
+    if (action & Qt::DropAction::MoveAction) {
       setPlayerType(GameResourceManager::getRandomAgent());
     }
     setCursor(Qt::OpenHandCursor);

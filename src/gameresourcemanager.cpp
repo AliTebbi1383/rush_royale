@@ -15,6 +15,9 @@ void GameResourceManager::init() {
   DECLARE_RESOURCE(manager, Enemy1, ":/assets/enemy.png");
   DECLARE_RESOURCE(manager, Enemy2, ":/assets/enemy2.png");
   DECLARE_RESOURCE(manager, Enemy3, ":/assets/enemy3.png");
+  // Grasses
+  manager->red_grass = QPixmap(":/assets/red_grass.jpg");
+  manager->green_grass = QPixmap(":/assets/green_grass.jpg");
 }
 
 void GameResourceManager::paintImage(QPainter *painter, QRectF rect,

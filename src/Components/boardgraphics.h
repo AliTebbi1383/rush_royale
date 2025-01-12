@@ -6,10 +6,11 @@
 class BoardGraphics : public GameGraphics {
   Q_OBJECT
  public:
-  BoardGraphics(bool enemy,QGraphicsItem *parent = nullptr);
+  BoardGraphics(bool enemy, QGraphicsItem *parent = nullptr);
 
  protected:
-  void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+  void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+             QWidget *widget) override;
   void dragEnterEvent(QGraphicsSceneDragDropEvent *event) override;
   void dragLeaveEvent(QGraphicsSceneDragDropEvent *event) override;
   void dropEvent(QGraphicsSceneDragDropEvent *event) override;

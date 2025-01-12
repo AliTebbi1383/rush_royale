@@ -11,23 +11,23 @@ QT_FORWARD_DECLARE_CLASS(QPushButton)
 class StartPageGraphicsView : public QGraphicsView {
   Q_OBJECT
  public:
-  StartPageGraphicsView(QWidget* parent = nullptr);
+  StartPageGraphicsView(QWidget *parent = nullptr);
   ~StartPageGraphicsView();
 
-  void setBackground(const QPixmap& pixmap);
+  void setBackground(const QPixmap &pixmap);
 
  signals:
   void startClicked();
 
  protected:
-  void resizeEvent(QResizeEvent* event) override;
+  void resizeEvent(QResizeEvent *event) override;
 
  private:
-  QGraphicsPixmapItem* m_background_item;
+  QGraphicsPixmapItem *m_background_item;
   QGraphicsWidget *m_layout_widget;
-  QGraphicsLinearLayout* m_layout;
-  QGraphicsProxyWidget* m_start_btn_proxy;
-  QPushButton* m_start_btn;
+  QGraphicsLinearLayout *m_layout;
+  QGraphicsProxyWidget *m_start_btn_proxy;
+  QPushButton *m_start_btn;
 
  private slots:
   void onStartBtnClicked();
