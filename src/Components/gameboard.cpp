@@ -11,6 +11,8 @@
 
 #include "agentgraphics.h"
 #include "boardgraphics.h"
+#include "cardgraphics.h"
+#include "elixirgraphics.h"
 #include "gamegraphics.h"
 
 GameBoard::GameBoard(QWidget *parent) : QGraphicsView(parent) {
@@ -78,10 +80,20 @@ GameBoard::GameBoard(QWidget *parent) : QGraphicsView(parent) {
   enemies_timer->setTimerType(Qt::CoarseTimer);
   enemies_timer->start(750);
 
-  auto *m_elixir_proxy = new QGraphicsProxyWidget(m_layout_widget);
-  m_elixir_label = new QLabel("Elixir: 0");
-  m_elixir_proxy->setWidget(m_elixir_label);
-  m_game_container->addItem(m_elixir_proxy);
+  m_game_state_layout = new QGraphicsLinearLayout();
+
+  m_elixir_widget = new ElixirGraphics();
+  m_game_state_layout->addItem(m_elixir_widget);
+  m_game_state_layout->setAlignment(m_elixir_widget, Qt::AlignCenter);
+  m_game_state_layout->addStretch();
+  m_elixir_widget->startAnimation();
+
+  m_game_state_layout->addItem(new CardGraphics(GameResourceManager::Agent1));
+  m_game_state_layout->addItem(new CardGraphics(GameResourceManager::Agent2));
+  m_game_state_layout->addItem(new CardGraphics(GameResourceManager::Agent3));
+  m_game_state_layout->setSpacing(0);
+
+  m_game_container->addItem(m_game_state_layout);
 
   scene->addItem(m_layout_widget);
 
@@ -142,7 +154,10 @@ void GameBoard::updateEnemies() {
       graphics->setPlayerType(pastState);
     }
   }
-  if (timerCounter % 5 == 0) {
+  if (timerCounter == 4) {
+    m_elixir_widget->incrementEixirs();
+  }
+  if (timerCounter == 0) {
     m_enemies.push_front(0);
     auto *graphics = mapEnemyFromIndex(0);
     graphics->setPlayerType(GameResourceManager::getRandomEnemy());

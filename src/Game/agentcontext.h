@@ -20,6 +20,8 @@ class AgentContext : public QObject {
   };
   Q_ENUM(AgentType);
 
+  Q_DISABLE_COPY(AgentContext)
+
   static AgentContext *instance();
   bool level_up(AgentType type);
 

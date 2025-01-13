@@ -9,6 +9,7 @@
 #define GAME_ENEMY_PATH_LENGTH (GAME_COLUMNS_COUNT + 2 * GAME_ROWS_COUNT - 2)
 
 QT_FORWARD_DECLARE_CLASS(GameGraphics)
+QT_FORWARD_DECLARE_CLASS(ElixirGraphics)
 
 QT_FORWARD_DECLARE_CLASS(QGraphicsWidget)
 QT_FORWARD_DECLARE_CLASS(QGraphicsLinearLayout)
@@ -34,9 +35,10 @@ class GameBoard : public QGraphicsView {
   QGraphicsWidget *m_layout_widget;
   QGraphicsLinearLayout *m_game_container;
   QGraphicsLinearLayout *m_agents_layout;
+  QGraphicsLinearLayout *m_game_state_layout;
   QGraphicsGridLayout *m_game_layout;
   QGraphicsPathItem *m_enemies_path;
-  QLabel *m_elixir_label;
+  ElixirGraphics *m_elixir_widget;
   QList<int> m_enemies;
   QLabel *m_gate_lbls;
   AgentsDeckArray m_agents;

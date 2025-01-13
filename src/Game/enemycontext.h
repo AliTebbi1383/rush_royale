@@ -18,6 +18,7 @@ class EnemyContext : public QObject {
   };
   Q_ENUM(Type);
 
+  Q_DISABLE_COPY(EnemyContext)
   static EnemyContext *instance();
 
   void add_enemy(Enemy *enemy);

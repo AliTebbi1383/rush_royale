@@ -8,6 +8,8 @@ set(app_SRCS
     Components/gamegraphics.h Components/gamegraphics.cpp
     Components/agentgraphics.h Components/agentgraphics.cpp
     Components/boardgraphics.h Components/boardgraphics.cpp
+		Components/elixirgraphics.h Components/elixirgraphics.cpp
+		Components/cardgraphics.h Components/cardgraphics.cpp
     # Game
     Game/agent.h Game/agent.cpp
     Game/agentcontext.h Game/agentcontext.cpp
@@ -28,6 +30,7 @@ set(app_SRCS
     Game/soldierenemy.h Game/soldierenemy.cpp
     Game/runnersoldierenemy.h Game/runnersoldierenemy.cpp
     Game/sheildersoldierenemy.h Game/sheildersoldierenemy.cpp
+		Game/gamecontext.h Game/gamecontext.cpp
     # main
     gameresourcemanager.h gameresourcemanager.cpp
     Logger.h
