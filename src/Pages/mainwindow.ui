@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>750</width>
+    <width>900</width>
     <height>700</height>
    </rect>
   </property>
@@ -19,7 +19,7 @@
   <property name="windowTitle">
    <string>Main Window</string>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout">
+  <layout class="QHBoxLayout" name="horizontalLayout" stretch="0">
    <property name="spacing">
     <number>0</number>
    </property>
@@ -36,7 +36,11 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="GameBoard" name="graphicsView"/>
+    <widget class="GameBoard" name="graphicsView">
+     <property name="cacheMode">
+      <set>QGraphicsView::CacheModeFlag::CacheBackground</set>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

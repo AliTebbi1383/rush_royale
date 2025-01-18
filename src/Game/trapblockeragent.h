@@ -9,8 +9,6 @@ class TrapBlockerAgent : public BlockerAgent {
   explicit TrapBlockerAgent(QObject *parent = nullptr);
 
   void do_work() override;
-
- protected:
   AgentContext::AgentType type() const override;
 };
 

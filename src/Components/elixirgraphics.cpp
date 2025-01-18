@@ -17,7 +17,7 @@ ElixirGraphics::ElixirGraphics(QGraphicsItem *parent)
 ElixirGraphics::~ElixirGraphics() { delete animation; }
 
 QRectF ElixirGraphics::boundingRect() const {
-  return QRectF(0.0f, 0.0f, 60.0f, 60.0f);
+  return QRectF(0.0f, 0.0f, 90.0f, 90.0f);
 }
 
 void ElixirGraphics::updateElixir() {

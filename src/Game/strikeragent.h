@@ -11,8 +11,6 @@ class StrikerAgent : public Agent {
   explicit StrikerAgent(QObject* parent = nullptr);
 
   void attack() override;
-
- protected:
   virtual Enemy* select_enemy() = 0;
 
  private:

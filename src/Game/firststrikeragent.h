@@ -9,8 +9,6 @@ class FirstStrikerAgent : public StrikerAgent {
   explicit FirstStrikerAgent(QObject* parent = nullptr);
 
   Enemy* select_enemy() override;
-
- protected:
   AgentContext::AgentType type() const override;
 };
 

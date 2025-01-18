@@ -9,8 +9,6 @@ class MaxHealthStrikerAgent : public StrikerAgent {
   explicit MaxHealthStrikerAgent(QObject* parent = nullptr);
 
   Enemy* select_enemy() override;
-
- protected:
   AgentContext::AgentType type() const override;
 };
 

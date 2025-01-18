@@ -5,8 +5,7 @@
 #include <QMimeData>
 #include <QPainter>
 
-GameGraphics::GameGraphics(QGraphicsItem *parent)
-    : QGraphicsWidget(parent), ptype(GameResourceManager::Dummy) {
+GameGraphics::GameGraphics(QGraphicsItem *parent) : QGraphicsWidget(parent) {
   setAcceptedMouseButtons(Qt::LeftButton);
 }
 
@@ -31,22 +30,16 @@ void GameGraphics::setBorderTickness(qreal newTickness) {
   }
 }
 
-void GameGraphics::resetPlayerType() {
-  setPlayerType(GameResourceManager::Dummy);
-}
-
-void GameGraphics::setPlayerType(GameResourceManager::PlayerType newPtype) {
-  if (ptype != newPtype) {
-    ptype = newPtype;
-    update();
-  }
-}
-
 void GameGraphics::setBorderColor(const QColor &newColor) {
   if (m_border_color != newColor) {
     m_border_color = newColor;
     update();
   }
+}
+
+void GameGraphics::paintImage(QPainter *painter, const QRectF &rect) {
+  Q_UNUSED(painter);
+  Q_UNUSED(rect);
 }
 
 void GameGraphics::paint(QPainter *painter,
@@ -57,11 +50,9 @@ void GameGraphics::paint(QPainter *painter,
   float bm = 5.0f * m_border_thickness;
   QRectF rect = boundingRect().marginsRemoved(QMarginsF{bm, bm, bm, bm});
 
-  if (hasPlayer()) {
-    aResourceManager->paintImage(painter, rect, ptype);
-  }
+  paintImage(painter, rect);
 
   QPen pen(m_border_color, m_border_thickness);
   painter->setPen(pen);
-  painter->drawRect(rect);
+  painter->drawRect(boundingRect());
 }

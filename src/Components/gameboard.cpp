@@ -1,5 +1,7 @@
 #include "gameboard.h"
 
+#include <Logger.h>
+
 #include <QGraphicsGridLayout>
 #include <QGraphicsLinearLayout>
 #include <QGraphicsProxyWidget>
@@ -9,20 +11,20 @@
 #include <QRandomGenerator>
 #include <QTimer>
 
-#include "agentgraphics.h"
+#include "agentdraggablegraphics.h"
 #include "boardgraphics.h"
 #include "cardgraphics.h"
 #include "elixirgraphics.h"
-#include "gamegraphics.h"
 
 GameBoard::GameBoard(QWidget *parent) : QGraphicsView(parent) {
   QGraphicsScene *scene = new QGraphicsScene(this);
 
   m_layout_widget = new QGraphicsWidget();
+  m_layout_widget->setSizePolicy(
+      QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred));
   m_layout_widget->setZValue(1);
 
   m_game_container = new QGraphicsLinearLayout(Qt::Vertical);
-
   m_game_layout = new QGraphicsGridLayout();
   m_agents_layout = new QGraphicsLinearLayout(Qt::Horizontal);
 
@@ -33,12 +35,25 @@ GameBoard::GameBoard(QWidget *parent) : QGraphicsView(parent) {
 
   for (int i = 0; i < m_game_members.size(); ++i) {
     for (int j = 0; j < m_game_members[i].size(); ++j) {
-      auto &cell = m_game_members[i][j];
       bool isEnemy = isEnemyWay(i, j);
-      cell = new BoardGraphics(isEnemy, m_layout_widget);
-      m_game_layout->addItem(cell, i, j, Qt::AlignCenter);
+      if (isEnemy) {
+        m_game_members[i][j] =
+            new BoardGraphics(isEnemy, 0, 0, m_layout_widget);
+      } else {
+        m_game_members[i][j] =
+            new BoardGraphics(isEnemy, i - 1, j - 1, m_layout_widget);
+        connect(m_game_members[i][j], &BoardGraphics::playerAdded, this,
+                &GameBoard::playerAdded);
+      }
+      m_game_layout->addItem(m_game_members[i][j], i, j, Qt::AlignCenter);
     }
   }
+
+  m_game_container->setAlignment(m_game_layout, Qt::AlignVCenter);
+  m_game_layout->setSizePolicy(
+      QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+  m_game_container->setAlignment(m_game_layout, Qt::AlignCenter);
+  m_game_layout->setSpacing(10);
 
   QPainterPath enemyPath;
   m_enemies_path =
@@ -69,33 +84,35 @@ GameBoard::GameBoard(QWidget *parent) : QGraphicsView(parent) {
 
   m_agents_layout->addStretch();
   for (auto &agent : m_agents) {
-    agent = new AgentGraphics(m_layout_widget);
-    agent->setPlayerType(GameResourceManager::getRandomAgent());
+    agent = new AgentDraggableGraphics(m_layout_widget);
+    agent->setPlayerType(AgentContext::pick_random());
     m_agents_layout->addItem(agent);
   }
   m_agents_layout->addStretch();
-
-  QTimer *enemies_timer = new QTimer(this);
-  connect(enemies_timer, &QTimer::timeout, this, &GameBoard::updateEnemies);
-  enemies_timer->setTimerType(Qt::CoarseTimer);
-  enemies_timer->start(750);
 
   m_game_state_layout = new QGraphicsLinearLayout();
 
   m_elixir_widget = new ElixirGraphics();
   m_game_state_layout->addItem(m_elixir_widget);
-  m_game_state_layout->setAlignment(m_elixir_widget, Qt::AlignCenter);
-  m_game_state_layout->addStretch();
   m_elixir_widget->startAnimation();
 
-  m_game_state_layout->addItem(new CardGraphics(GameResourceManager::Agent1));
-  m_game_state_layout->addItem(new CardGraphics(GameResourceManager::Agent2));
-  m_game_state_layout->addItem(new CardGraphics(GameResourceManager::Agent3));
-  m_game_state_layout->setSpacing(0);
+  for (int i = 0; i <= AgentContext::TrapBlocker; ++i) {
+    m_game_state_layout->addItem(new CardGraphics(
+        static_cast<AgentContext::AgentType>(i), m_layout_widget));
+  }
 
   m_game_container->addItem(m_game_state_layout);
+  m_game_container->setAlignment(m_game_state_layout, Qt::AlignHCenter);
+  m_game_state_layout->setSizePolicy(
+      QSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum));
 
   scene->addItem(m_layout_widget);
+
+  QTimer *timer = new QTimer(this);
+  timer->setTimerType(Qt::CoarseTimer);
+  timer->setInterval(3500);
+  connect(timer, &QTimer::timeout, this, &GameBoard::timeout);
+  timer->start();
 
   setScene(scene);
 }
@@ -128,42 +145,16 @@ void GameBoard::resizeEvent(QResizeEvent *event) {
   QGraphicsView::resizeEvent(event);
 }
 
+void GameBoard::playerAdded(int loc_x, int loc_y,
+                            AgentContext::AgentType type) {
+  qCDebug(gameLog) << "Agent by ID: " << type << ", Moved into board at: {"
+                   << loc_x << "," << loc_y << "}";
+}
+
+void GameBoard::timeout() { m_elixir_widget->incrementEixirs(); }
+
 bool GameBoard::isEnemyWay(int i, int j) {
   return !i || !j || j + 1 == GAME_COLUMNS_COUNT;
-}
-
-GameGraphics *GameBoard::mapEnemyFromIndex(int index) {
-  if (index < GAME_ROWS_COUNT) {
-    return m_game_members[GAME_ROWS_COUNT - index - 1][0];
-  } else if (index < GAME_ROWS_COUNT + GAME_COLUMNS_COUNT - 1) {
-    return m_game_members[0][index - GAME_ROWS_COUNT + 1];
-  } else {
-    index -= GAME_ROWS_COUNT + GAME_COLUMNS_COUNT - 2;
-    return m_game_members[index][GAME_COLUMNS_COUNT - 1];
-  }
-}
-
-void GameBoard::updateEnemies() {
-  for (int &i : m_enemies) {
-    auto *graphics = mapEnemyFromIndex(i);
-    auto pastState = graphics->playerType();
-    graphics->resetPlayerType();
-    i++;
-    if (i < GAME_ENEMY_PATH_LENGTH) {
-      graphics = mapEnemyFromIndex(i);
-      graphics->setPlayerType(pastState);
-    }
-  }
-  if (timerCounter == 4) {
-    m_elixir_widget->incrementEixirs();
-  }
-  if (timerCounter == 0) {
-    m_enemies.push_front(0);
-    auto *graphics = mapEnemyFromIndex(0);
-    graphics->setPlayerType(GameResourceManager::getRandomEnemy());
-  }
-  m_enemies.removeAll(GAME_ENEMY_PATH_LENGTH);
-  timerCounter = (timerCounter + 1) % 5;
 }
 
 #undef GAME_BOARD_SQUARE_WIDTH

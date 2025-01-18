@@ -13,6 +13,8 @@ set(app_SRCS
 		Components/gameboard.cpp
 		Components/gamegraphics.h
 		Components/gamegraphics.cpp
+		Components/agentdraggablegraphics.h
+		Components/agentdraggablegraphics.cpp
 		Components/agentgraphics.h
 		Components/agentgraphics.cpp
 		Components/boardgraphics.h

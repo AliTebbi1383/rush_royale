@@ -9,8 +9,6 @@ class RandomStrikerAgent : public StrikerAgent {
   explicit RandomStrikerAgent(QObject* parent = nullptr);
 
   Enemy* select_enemy() override;
-
- protected:
   AgentContext::AgentType type() const override;
 };
 

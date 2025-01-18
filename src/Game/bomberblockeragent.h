@@ -9,8 +9,6 @@ class BomberBlockerAgent : public BlockerAgent {
   explicit BomberBlockerAgent(QObject *parent = nullptr);
 
   void do_work() override;
-
- protected:
   AgentContext::AgentType type() const override;
 };
 
