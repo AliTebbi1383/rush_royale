@@ -17,7 +17,6 @@ class ElixirGraphics : public QGraphicsWidget {
 
   void updateElixir();
   void setElixirs(size_t new_elixirs);
-  void incrementEixirs();
   void startAnimation();
 
  protected:
@@ -34,6 +33,8 @@ class ElixirGraphics : public QGraphicsWidget {
   QPropertyAnimation *animation;
   const QPixmap elixir_logo;
   const QFont numbers_font;
+
+  inline bool isFull() const;
 };
 
 #endif  // ELIXIRGRAPHICS_H

@@ -1,5 +1,6 @@
 #include "gameboard.h"
 
+#include <Game/gamecontext.h>
 #include <Logger.h>
 
 #include <QGraphicsGridLayout>
@@ -9,7 +10,6 @@
 #include <QGraphicsWidget>
 #include <QLabel>
 #include <QRandomGenerator>
-#include <QTimer>
 
 #include "agentdraggablegraphics.h"
 #include "boardgraphics.h"
@@ -97,8 +97,11 @@ GameBoard::GameBoard(QWidget *parent) : QGraphicsView(parent) {
   m_elixir_widget->startAnimation();
 
   for (int i = 0; i <= AgentContext::TrapBlocker; ++i) {
-    m_game_state_layout->addItem(new CardGraphics(
-        static_cast<AgentContext::AgentType>(i), m_layout_widget));
+    auto *item = new CardGraphics(static_cast<AgentContext::AgentType>(i),
+                                  m_layout_widget);
+    m_game_state_layout->addItem(item);
+    connect(gameContext, SIGNAL(elixirsChanged(size_t)), item,
+            SLOT(forceUpdate()));
   }
 
   m_game_container->addItem(m_game_state_layout);
@@ -108,11 +111,9 @@ GameBoard::GameBoard(QWidget *parent) : QGraphicsView(parent) {
 
   scene->addItem(m_layout_widget);
 
-  QTimer *timer = new QTimer(this);
-  timer->setTimerType(Qt::CoarseTimer);
-  timer->setInterval(3500);
-  connect(timer, &QTimer::timeout, this, &GameBoard::timeout);
-  timer->start();
+  gameContext->startContext(500);
+  connect(gameContext, &GameContext::elixirsChanged, this,
+          &GameBoard::onElixirChanged);
 
   setScene(scene);
 }
@@ -151,7 +152,9 @@ void GameBoard::playerAdded(int loc_x, int loc_y,
                    << loc_x << "," << loc_y << "}";
 }
 
-void GameBoard::timeout() { m_elixir_widget->incrementEixirs(); }
+void GameBoard::onElixirChanged(size_t newElixir) {
+  m_elixir_widget->setElixirs(newElixir);
+}
 
 bool GameBoard::isEnemyWay(int i, int j) {
   return !i || !j || j + 1 == GAME_COLUMNS_COUNT;

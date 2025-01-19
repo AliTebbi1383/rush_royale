@@ -11,7 +11,7 @@ class GameGraphics : public QGraphicsWidget {
  public:
   GameGraphics(QGraphicsItem *parent = nullptr);
 
-  QRectF boundingRect() const override;
+  virtual QRectF boundingRect() const override;
 
   qreal squareWidth() const { return this->m_square_width; }
   void setSquareWidth(qreal newWidth);

@@ -20,6 +20,6 @@ void AgentGraphics::resetPlayer() {
 
 void AgentGraphics::paintImage(QPainter *painter, const QRectF &rect) {
   if (AgentContext::is_valid_player(type)) {
-    AgentContext::paint_player(painter, rect, type);
+    agentContext->paint_player(painter, rect, type, isWantedPrintUpgrade);
   }
 }

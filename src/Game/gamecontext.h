@@ -7,12 +7,13 @@ QT_FORWARD_DECLARE_CLASS(QTimer)
 
 #define gameContext GameContext::instance()
 
+class AgentContext;
+
 class GameContext : public QObject {
   Q_OBJECT
   Q_PROPERTY(size_t elixirs READ elixirs NOTIFY elixirsChanged)
  public:
   static GameContext* instance();
-
   Q_DISABLE_COPY(GameContext)
 
   void startContext(int interval);
@@ -20,6 +21,7 @@ class GameContext : public QObject {
 
   size_t elixirs() const;
 
+  inline static const int maximum_elixirs = 10;
  signals:
   void elixirsChanged(size_t elixirs);
 
@@ -28,6 +30,9 @@ class GameContext : public QObject {
 
  private:
   GameContext();
+  friend class AgentContext;
+
+  void setElixirs(size_t elixirs);
 
   QTimer* m_timer;
   size_t m_elixirs;

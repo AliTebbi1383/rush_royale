@@ -36,7 +36,7 @@ class GameBoard : public QGraphicsView {
 
  private slots:
   void playerAdded(int, int, AgentContext::AgentType);
-  void timeout();
+  void onElixirChanged(size_t newElixir);
 
  private:
   QGraphicsWidget *m_layout_widget;

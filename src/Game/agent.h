@@ -10,9 +10,7 @@ class Agent : public QObject {
  public:
   explicit Agent(QObject* parent = nullptr);
 
-  int getNeededElixir() const { return needed_elixir; }
   int getSpeedLevel() const { return speed_level; }
-  int getPowerLevel() const { return power_level; }
 
   bool powerUp();
   bool merge(Agent* other);
@@ -21,8 +19,6 @@ class Agent : public QObject {
   virtual AgentContext::AgentType type() const = 0;
 
  private:
-  int needed_elixir;
-  int power_level;
   int speed_level;
 };
 

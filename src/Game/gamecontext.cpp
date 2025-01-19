@@ -2,10 +2,17 @@
 
 #include <QTimer>
 
-GameContext::GameContext() : QObject{nullptr} {
+GameContext::GameContext() : QObject{nullptr}, m_elixirs(0) {
   m_timer = new QTimer(this);
   m_timer->setTimerType(Qt::PreciseTimer);
   connect(m_timer, &QTimer::timeout, this, &GameContext::onTimerTicks);
+}
+
+void GameContext::setElixirs(size_t n_elixirs) {
+  if (n_elixirs != m_elixirs) {
+    emit elixirsChanged(n_elixirs);
+    m_elixirs = n_elixirs;
+  }
 }
 
 GameContext* GameContext::instance() {
@@ -27,8 +34,10 @@ int GameContext::getContextInterval() const { return m_timer->interval(); }
 size_t GameContext::elixirs() const { return m_elixirs; }
 
 void GameContext::onTimerTicks() {
-  m_elixirs = m_elixirs + 1;
-  emit elixirsChanged(m_elixirs);
+  if (m_elixirs < maximum_elixirs) {
+    m_elixirs = m_elixirs + 1;
+    emit elixirsChanged(m_elixirs);
+  }
 }
 
 GameContext* GameContext::m_instance = nullptr;

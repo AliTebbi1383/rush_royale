@@ -3,6 +3,8 @@
 #include <QPainter>
 #include <QPropertyAnimation>
 
+#include "Game/gamecontext.h"
+
 ElixirGraphics::ElixirGraphics(QGraphicsItem *parent)
     : QGraphicsWidget(parent),
       elixir_logo(":/assets/elixir.png"),
@@ -11,7 +13,7 @@ ElixirGraphics::ElixirGraphics(QGraphicsItem *parent)
   animation = new QPropertyAnimation(this, "elixirStep");
   animation->setStartValue(0.0f);
   animation->setEndValue(1.0f);
-  animation->setDuration(3000);
+  animation->setDuration(600);
 }
 
 ElixirGraphics::~ElixirGraphics() { delete animation; }
@@ -35,8 +37,6 @@ void ElixirGraphics::setElixirs(size_t new_elixirs) {
   }
 }
 
-void ElixirGraphics::incrementEixirs() { setElixirs(elixirs + 1); }
-
 void ElixirGraphics::startAnimation() { animation->start(); }
 
 void ElixirGraphics::setElixirStep(float new_elixir_step) {
@@ -57,7 +57,7 @@ void ElixirGraphics::paint(QPainter *painter,
 
   painter->drawPixmap(boundingRect(), elixir_logo, elixir_logo.rect());
   painter->setBrush(Qt::NoBrush);
-  painter->setPen(QPen(Qt::white, 3.2f));
+  painter->setPen(QPen(isFull() ? Qt::red : Qt::white, 3.2f));
   painter->drawArc(ellipse_rect, 0 * 16, elixir_step * 360 * 16);
   painter->setPen(Qt::black);
 
@@ -73,4 +73,8 @@ void ElixirGraphics::paint(QPainter *painter,
   painter->drawText(p.x() - size.width() / 2, p.y() + size.height() / 2, txt);
 
   painter->restore();
+}
+
+bool ElixirGraphics::isFull() const {
+  return elixirs == GameContext::maximum_elixirs;
 }

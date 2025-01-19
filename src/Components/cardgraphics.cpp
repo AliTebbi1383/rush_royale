@@ -1,5 +1,8 @@
 #include "cardgraphics.h"
 
+#include <Game/agentcontext.h>
+
+#include <QGraphicsSceneMouseEvent>
 #include <QPainter>
 
 #define CARDS_BORDER_TICKNESS 1.5f
@@ -12,14 +15,18 @@ CardGraphics::CardGraphics(AgentContext::AgentType type, QGraphicsItem *parent)
   setSquareWidth(CARDS_SQUARE_WIDTH);
   setPlayerType(type);
   setFont(QFont("Times New Roman", 14));
+  this->isWantedPrintUpgrade = true;
+  setAcceptedMouseButtons(Qt::LeftButton);
 }
+
+void CardGraphics::forceUpdate() { update(); }
 
 void CardGraphics::paint(QPainter *painter,
                          const QStyleOptionGraphicsItem *option,
                          QWidget *widget) {
   GameGraphics::paint(painter, option, widget);
 
-  QRectF brect = this->boundingRect();
+  QRectF brect = AgentGraphics::boundingRect();
 
   QString txt = QString("Level %1").arg(agentContext->level(playerType()));
 
@@ -27,11 +34,21 @@ void CardGraphics::paint(QPainter *painter,
   QSize text_size = metrics.size(0, txt);
 
   painter->save();
-  painter->setPen(Qt::green);
+  painter->setPen(Qt::yellow);
   painter->drawText((brect.bottomLeft() + brect.bottomRight()) / 2 +
                         QPointF(-text_size.width() / 2, 15.0f),
                     txt);
   painter->restore();
+}
+
+void CardGraphics::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+  agentContext->level_up(playerType());
+}
+
+QRectF CardGraphics::boundingRect() const {
+  QRectF rect = AgentGraphics::boundingRect();
+  rect.setHeight(rect.height() + 30);
+  return rect;
 }
 
 #undef CARDS_BORDER_TICKNESS

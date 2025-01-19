@@ -21,6 +21,7 @@ class AgentGraphics : public GameGraphics {
  protected:
   void paintImage(QPainter *painter, const QRectF &rect) override;
   AgentContext::AgentType type;
+  bool isWantedPrintUpgrade = false;
 };
 
 #endif  // AGENTGRAPHICS_H

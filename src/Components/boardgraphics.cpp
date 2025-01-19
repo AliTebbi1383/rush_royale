@@ -27,7 +27,7 @@ BoardGraphics::BoardGraphics(bool enemy, int loc_x, int loc_y,
 
 void BoardGraphics::paintImage(QPainter *painter, const QRectF &rect) {
   if (hasPlayer()) {
-    AgentContext::paint_player(painter, rect, agent->type());
+    agentContext->paint_player(painter, rect, agent->type());
   }
 }
 
@@ -51,13 +51,15 @@ void BoardGraphics::dragEnterEvent(QGraphicsSceneDragDropEvent *event) {
       event->mimeData()->hasFormat("application/x-dnditemdata")) {
     auto playerType = AgentContext::deserialize_agent_type(
         event->mimeData()->data("application/x-dnditemdata"));
-    event->setProposedAction(Qt::MoveAction);
-    event->accept();
-    m_overDrop = true;
-    update();
-  } else {
-    event->ignore();
+    if (agentContext->canDeploy(playerType)) {
+      event->setProposedAction(Qt::MoveAction);
+      event->accept();
+      m_overDrop = true;
+      update();
+      return;
+    }
   }
+  event->ignore();
 }
 
 void BoardGraphics::dragLeaveEvent(QGraphicsSceneDragDropEvent *event) {

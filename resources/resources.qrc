@@ -11,5 +11,6 @@
         <file>assets/red_grass.jpg</file>
         <file>assets/green_grass.jpg</file>
         <file>assets/elixir.png</file>
+        <file>assets/upgrade.png</file>
     </qresource>
 </RCC>
