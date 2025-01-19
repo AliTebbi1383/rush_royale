@@ -9,7 +9,7 @@ class RunnerSoldierEnemy : public SoldierEnemy {
   explicit RunnerSoldierEnemy(QObject *parent = nullptr);
 
  protected:
-  EnemyContext::Type type() const override;
+  EnemyContext::EnemyType type() const override;
 };
 
 #endif  // RUNNERSOLDIERENEMY_H

@@ -36,6 +36,7 @@ class GameBoard : public QGraphicsView {
  private slots:
   void playerAdded(int, int, AgentContext::AgentType);
   void onElixirChanged(size_t newElixir);
+  void moveEnemies();
 
  private:
   QGraphicsWidget *m_layout_widget;
@@ -49,6 +50,10 @@ class GameBoard : public QGraphicsView {
   AgentsDeckArray m_agents;
   GameBoardArray m_game_members;
 
+  bool isWaving;
+  int remaining_sleep = 0;
+
+  void updateEnemyLocation(QGraphicsPixmapItem *item, float step);
   static bool isEnemyWay(int i, int j);
 };
 

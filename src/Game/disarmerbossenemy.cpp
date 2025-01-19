@@ -4,7 +4,7 @@
 
 DisarmerBossEnemy::DisarmerBossEnemy(QObject *parent) : BossEnemy{parent} {}
 
-EnemyContext::Type DisarmerBossEnemy::type() const {
+EnemyContext::EnemyType DisarmerBossEnemy::type() const {
   return EnemyContext::DisarmerBoss;
 }
 

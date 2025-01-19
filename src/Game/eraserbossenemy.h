@@ -9,7 +9,7 @@ class EraserBossEnemy : public BossEnemy {
   explicit EraserBossEnemy(QObject *parent = nullptr);
 
  protected:
-  EnemyContext::Type type() const override;
+  EnemyContext::EnemyType type() const override;
   void do_work() override;
 };
 

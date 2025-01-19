@@ -2,8 +2,9 @@
 
 RunnerSoldierEnemy::RunnerSoldierEnemy(QObject *parent) : SoldierEnemy{parent} {
   this->setDamage(10);
+  this->speed = 1;
 }
 
-EnemyContext::Type RunnerSoldierEnemy::type() const {
+EnemyContext::EnemyType RunnerSoldierEnemy::type() const {
   return EnemyContext::RunnerSoldier;
 }

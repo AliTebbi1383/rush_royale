@@ -4,7 +4,7 @@
 
 EraserBossEnemy::EraserBossEnemy(QObject *parent) : BossEnemy{parent} {}
 
-EnemyContext::Type EraserBossEnemy::type() const {
+EnemyContext::EnemyType EraserBossEnemy::type() const {
   return EnemyContext::EraserBoss;
 }
 

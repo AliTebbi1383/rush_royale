@@ -2,4 +2,4 @@
 
 Enemy::Enemy(QObject *parent) : QObject{parent} {}
 
-void Enemy::setId(quint16 new_id) { id = new_id; }
+float Enemy::Speed() const { return speed; }

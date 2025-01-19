@@ -1,7 +1,10 @@
 #include "gameboard.h"
 
+#include <Game/enemy.h>
+#include <Game/enemycontext.h>
 #include <Game/gamecontext.h>
 #include <Logger.h>
+#include <qtimer.h>
 
 #include <QGraphicsGridLayout>
 #include <QGraphicsLinearLayout>
@@ -19,8 +22,6 @@
 
 GameBoard::GameBoard(QWidget *parent) : QGraphicsView(parent) {
   QGraphicsScene *scene = new QGraphicsScene(this);
-  setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
   m_layout_widget = new QGraphicsWidget();
   m_layout_widget->setSizePolicy(
@@ -118,6 +119,14 @@ GameBoard::GameBoard(QWidget *parent) : QGraphicsView(parent) {
   connect(gameContext, &GameContext::elixirsChanged, this,
           &GameBoard::onElixirChanged);
 
+  QTimer *wave_timer = new QTimer(this);
+  wave_timer->setInterval(1000);
+  wave_timer->setTimerType(Qt::PreciseTimer);
+  connect(wave_timer, &QTimer::timeout, this, &GameBoard::moveEnemies);
+  wave_timer->start();
+
+  isWaving = true;
+
   setScene(scene);
 }
 
@@ -157,6 +166,63 @@ void GameBoard::playerAdded(int loc_x, int loc_y,
 
 void GameBoard::onElixirChanged(size_t newElixir) {
   m_elixir_widget->setElixirs(newElixir);
+}
+
+void GameBoard::moveEnemies() {
+  if (isWaving) {
+    qDebug() << "Moving Enemies!";
+
+    remaining_sleep = 0;
+
+    for (auto [enemy, enemy_graphics] : enemyContext->m_enemies) {
+      enemy->loc +=
+          ((1 <= enemy->loc && enemy->loc < 2) ? 0.2 : 0.25) * enemy->Speed();
+    }
+
+    QGraphicsPixmapItem *item = new QGraphicsPixmapItem();
+    item->setZValue(2);
+    enemyContext->add_random_soldier(item);
+    scene()->addItem(item);
+
+    for (auto iter = enemyContext->m_enemies.begin();
+         iter != enemyContext->m_enemies.end(); ++iter) {
+      auto [enemy, enemy_graphics] = *iter;
+      if (enemy->loc > 3) {
+        delete enemy;
+        delete enemy_graphics;
+        iter = enemyContext->m_enemies.erase(iter);
+      } else {
+        updateEnemyLocation(enemy_graphics, enemy->loc);
+      }
+    }
+  } else {
+    remaining_sleep += 1;
+    if (remaining_sleep > 3) isWaving = true;
+  }
+}
+
+void GameBoard::updateEnemyLocation(QGraphicsPixmapItem *item, float step) {
+  auto &item0 = m_game_members[GAME_ROWS_COUNT - 1][0];
+  QPointF start = item0->mapToScene((item0->boundingRect().bottomLeft() +
+                                     item0->boundingRect().bottomRight()) /
+                                    2);
+  auto &item1 = m_game_members[0][0];
+  QPointF midl = item1->mapToScene(item1->boundingRect().center());
+  auto &item2 = m_game_members[0][GAME_COLUMNS_COUNT - 1];
+  QPointF midr = item2->mapToScene(item2->boundingRect().center());
+  auto &item3 = m_game_members[GAME_ROWS_COUNT - 1][GAME_COLUMNS_COUNT - 1];
+  QPointF end = item3->mapToScene((item3->boundingRect().bottomLeft() +
+                                   item3->boundingRect().bottomRight()) /
+                                  2);
+
+  QPointF pos = step * (midl - start) + start;
+  if (step > 1 && step <= 2) {
+    pos = (step - 1) * (midr - midl) + midl;
+  } else if (step > 2) {
+    pos = (step - 2) * (end - midr) + midr;
+  }
+
+  item->setPos(pos - QPointF(32.0f, 32.0f));
 }
 
 bool GameBoard::isEnemyWay(int i, int j) {

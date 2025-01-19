@@ -4,7 +4,7 @@
 
 FreezerBossEnemy::FreezerBossEnemy(QObject *parent) : BossEnemy{parent} {}
 
-EnemyContext::Type FreezerBossEnemy::type() const {
+EnemyContext::EnemyType FreezerBossEnemy::type() const {
   return EnemyContext::FreezerBoss;
 }
 
