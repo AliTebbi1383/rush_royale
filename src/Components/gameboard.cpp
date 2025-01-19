@@ -5,6 +5,7 @@
 
 #include <QGraphicsGridLayout>
 #include <QGraphicsLinearLayout>
+#include <QGraphicsPixmapItem>
 #include <QGraphicsProxyWidget>
 #include <QGraphicsTextItem>
 #include <QGraphicsWidget>
@@ -18,6 +19,8 @@
 
 GameBoard::GameBoard(QWidget *parent) : QGraphicsView(parent) {
   QGraphicsScene *scene = new QGraphicsScene(this);
+  setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
   m_layout_widget = new QGraphicsWidget();
   m_layout_widget->setSizePolicy(

@@ -14,6 +14,7 @@ class Agent : public QObject {
 
   bool powerUp();
   bool merge(Agent* other);
+  int level() const;
 
   virtual void attack() = 0;
   virtual AgentContext::AgentType type() const = 0;

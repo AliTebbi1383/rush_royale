@@ -29,7 +29,7 @@ void CardGraphics::paint(QPainter *painter,
   QRectF brect = AgentGraphics::boundingRect();
 
   QString txt = QString("Level %1").arg(agentContext->level(playerType()));
-
+  if (agentContext->level(playerType()) == 5) txt += "(MAX)";
   QFontMetrics metrics(painter->fontMetrics());
   QSize text_size = metrics.size(0, txt);
 

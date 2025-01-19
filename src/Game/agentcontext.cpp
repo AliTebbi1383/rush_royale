@@ -1,7 +1,10 @@
 #include "agentcontext.h"
 
+#include <Logger.h>
+
 #include <QByteArray>
 #include <QDebug>
+#include <QMetaEnum>
 #include <QPainter>
 #include <QRandomGenerator>
 
@@ -44,7 +47,7 @@ void AgentContext::paint_player(QPainter* painter, const QRectF& rect,
   painter->setPen(Qt::black);
   painter->drawText(p + QPointF(0, box_size.height() / 2 + 5), text);
 
-  if (draw_upgrade &&
+  if (draw_upgrade && m_agents_map[type].level < 5 &&
       gameContext->elixirs() > m_agents_map[type].levelup_needed_elixir) {
     painter->drawPixmap(rect.bottomLeft() - QPoint(-10, 40), pix,
                         QRectF(0, 15, 64, 30));
@@ -91,8 +94,13 @@ AgentContext::AgentType AgentContext::pick_random() {
 }
 
 void AgentContext::level_up(AgentType type) {
-  if (m_agents_map[type].levelup_needed_elixir <= gameContext->elixirs()) {
-    qDebug() << "Leveling up: " << type << ", ...";
+  if (m_agents_map[type].levelup_needed_elixir <= gameContext->elixirs() &&
+      m_agents_map[type].level < 5) {
+    QMetaEnum meta_enum = QMetaEnum::fromType<AgentContext::AgentType>();
+    qCDebug(gameLog) << "Leveling up by "
+                     << m_agents_map[type].levelup_needed_elixir
+                     << " Price to level " << m_agents_map[type].level << " : "
+                     << meta_enum.valueToKey(type);
     m_agents_map[type].levelup_needed_elixir += 2;
     m_agents_map[type].level += 1;
     gameContext->setElixirs(gameContext->elixirs() -

@@ -67,7 +67,8 @@ set(app_SRCS
     # main
 		gameresourcemanager.h
 		gameresourcemanager.cpp
-    Logger.h
+		Logger.h
+		Logger.cpp
     main.cpp)
 
 qt_add_executable(rush_royale MANUAL_FINALIZATION ${app_RESOURCES} ${app_SRCS})

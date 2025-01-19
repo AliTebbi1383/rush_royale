@@ -9,9 +9,13 @@ class BlockerAgent : public Agent {
   explicit BlockerAgent(QObject *parent = nullptr);
 
   void attack() override;
+  int getRealDeletedEnemiesCount() const;
 
  protected:
   virtual void do_work() = 0;
+
+ private:
+  int delete_enemies_count = 2;
 };
 
 #endif  // BLOCKERAGENT_H

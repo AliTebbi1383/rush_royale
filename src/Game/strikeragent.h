@@ -10,6 +10,8 @@ class StrikerAgent : public Agent {
  public:
   explicit StrikerAgent(QObject* parent = nullptr);
 
+  int getRealDamage() const;
+
   void attack() override;
   virtual Enemy* select_enemy() = 0;
 
